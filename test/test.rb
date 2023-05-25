@@ -155,11 +155,11 @@ class WooCommerceAPITest < Minitest::Test
 
   def test_adding_query_params
     url = @oauth.send(:add_query_params, 'foo.com', filter: { sku: '123' }, order: 'created_at')
-    assert_equal url, URI.encode('foo.com?filter[sku]=123&order=created_at')
+    assert_equal url, CGI.escape('foo.com?filter[sku]=123&order=created_at')
   end
 
   def test_invalid_signature_method
-    assert_raises WooCommerce::OAuth::InvalidSignatureMethodError do 
+    assert_raises WooCommerce::OAuth::InvalidSignatureMethodError do
       client = WooCommerce::API.new("http://dev.test/", "user", "pass", signature_method: 'GARBAGE')
       client.get 'products'
     end
