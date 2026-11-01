@@ -26,8 +26,9 @@ module WooCommerce
 
       if url.include?("?")
         parsed_url = URI::parse(url)
-        CGI::parse(parsed_url.query).each do |key, value|
-          params[key] = value[0]
+        # Ruby 4.0 removed CGI.parse; the first value of a repeated key wins, as it did with CGI.parse.
+        URI.decode_www_form(parsed_url.query).each do |key, value|
+          params[key] ||= value
         end
         params = Hash[params.sort]
 
